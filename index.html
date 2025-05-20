@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Biodata</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 80%; margin: 0 auto; }
+        .header img { width: 600px; height: 400px; }
+        .menu { text-align: center; padding: 10px; }
+        .biodata, .portfolio { margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; }
+        table, th, td { border: 1px solid #ddd; padding: 8px; }
+        th, td { text-align: left; }
+        .portfolio img { width: 350px; height: 200px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Section 1: Menu -->
+        <section class="menu">
+            <a href="#header">Header</a> | 
+            <a href="#biodata">Biodata</a> | 
+            <a href="#portfolio">Portfolio</a>
+        </section>
+
+        <!-- Section 2: Judul di Kiri dan Gambar di Kanan -->
+        <section class="header">
+            <h1>Selamat Datang di Website Saya</h1>
+            <p>Ini adalah contoh header dengan dua kolom. Kolom kiri berisi judul dan kolom kanan berisi gambar.</p>
+            <img src="placeholder.jpg" alt="Header Image">
+        </section>
+
+        <!-- Section 3: Biodata dengan 6 Box -->
+        <section class="biodata" id="biodata">
+            <h2>About Me</h2>
+            <p>A short introduction about myself</p>
+            <table>
+                <tr>
+                    <th>Full Name</th>
+                    <td>[Nama Anda]</td>
+                    <th>Education</th>
+                    <td>[Pendidikan Anda]</td>
+                </tr>
+                <tr>
+                    <th>Contact</th>
+                    <td>[Kontak Anda]</td>
+                    <th>Hobby</th>
+                    <td>[Hobi Anda]</td>
+                </tr>
+                <tr>
+                    <th>Experience</th>
+                    <td>[Pengalaman Anda]</td>
+                    <th>Assets</th>
+                    <td>[Aset Anda]</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Section 4: Portofolio -->
+        <section class="portfolio" id="portfolio">
+            <h2>Portfolio</h2>
+            <div>
+                <img src="project1.jpg" alt="Proyek 1">
+                <p>Deskripsi proyek 1.</p>
+                <img src="project2.jpg" alt="Proyek 2">
+                <p>Deskripsi proyek 2.</p>
+                <img src="project3.jpg" alt="Proyek 3">
+                <p>Deskripsi proyek 3.</p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
