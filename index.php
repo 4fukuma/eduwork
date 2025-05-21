@@ -1,3 +1,7 @@
+<?php
+include 'config.php';
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -131,85 +135,116 @@
         <div class="row mt-5" id="products">
             <h2 class="text-primary">Our Products</h2>
             <div class="mb-3">
-                <label for="categoryFilter" class="form-label">Filter by Category:</label>
-                <select id="categoryFilter" class="form-select">
-                    <option value="all">All</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="clothing">Clothing</option>
-                    <option value="books">Books</option>
-                </select>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">Add Product</button>
             </div>
-            <div class="row row-cols-1 row-cols-md-3 g-4" id="productList">
-                <!-- Produk akan ditampilkan di sini oleh JavaScript -->
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <?php
+                // Read: Mengambil data produk dari database
+                $stmt = $pdo->query("SELECT * FROM products");
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    echo '
+                    <div class="col">
+                        <div class="card card-product">
+                            <img src="https://picsum.photos/300" class="card-img-top" alt="' . htmlspecialchars($row['nama_produk']) . '">
+                            <div class="card-body">
+                                <h5 class="card-title">' . htmlspecialchars($row['nama_produk']) . '</h5>
+                                <p class="card-text">' . htmlspecialchars($row['deskripsi']) . '</p>
+                                <p class="card-text"><strong>Rp ' . number_format($row['harga'], 0, ',', '.') . '</strong></p>
+                                <p class="card-text">Stock: ' . htmlspecialchars($row['stok']) . '</p>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProductModal" onclick="setEditModal(' . $row['id'] . ', \'' . htmlspecialchars($row['nama_produk']) . '\', ' . $row['harga'] . ', \'' . htmlspecialchars($row['deskripsi']) . '\', ' . $row['stok'] . ')">Edit</button>
+                                <a href="delete.php?id=' . $row['id'] . '" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this product?\')">Delete</a>
+                            </div>
+                        </div>
+                    </div>';
+                }
+                ?>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Modal untuk Tambah Produk -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Project Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                <form action="create.php" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addProductModalLabel">Add Product</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nama_produk" class="form-label">Product Name</label>
+                            <input type="text" class="form-control" id="nama_produk" name="nama_produk" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="harga" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="harga" name="harga" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deskripsi" class="form-label">Description</label>
+                            <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stok" class="form-label">Stock</label>
+                            <input type="number" class="form-control" id="stok" name="stok" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal untuk Edit Produk -->
+    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="update.php" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="edit_id" name="id">
+                        <div class="mb-3">
+                            <label for="edit_nama_produk" class="form-label">Product Name</label>
+                            <input type="text" class="form-control" id="edit_nama_produk" name="nama_produk" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_harga" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="edit_harga" name="harga" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_deskripsi" class="form-label">Description</label>
+                            <textarea class="form-control" id="edit_deskripsi" name="deskripsi" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_stok" class="form-label">Stock</label>
+                            <input type="number" class="form-control" id="edit_stok" name="stok" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update Product</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Array data produk
-        const products = [
-            { name: "Laptop", price: 10000000, description: "High-performance laptop", image: "https://picsum.photos/300", category: "electronics" },
-            { name: "T-Shirt", price: 150000, description: "Comfortable cotton t-shirt", image: "https://picsum.photos/300", category: "clothing" },
-            { name: "Book", price: 75000, description: "Best-selling novel", image: "https://picsum.photos/300", category: "books" },
-            { name: "Headphones", price: 500000, description: "Wireless headphones", image: "https://picsum.photos/300", category: "electronics" },
-            { name: "Jeans", price: 300000, description: "Stylish jeans", image: "https://picsum.photos/300", category: "clothing" },
-            { name: "Notebook", price: 50000, description: "Programming guide", image: "https://picsum.photos/300", category: "books" }
-        ];
-
-        // Fungsi untuk menampilkan produk
-        function displayProducts(productsToShow) {
-            const productList = document.getElementById('productList');
-            productList.innerHTML = ''; // Bersihkan daftar sebelumnya
-            productsToShow.forEach(product => {
-                const productCard = `
-                    <div class="col">
-                        <div class="card card-product">
-                            <img src="${product.image}" class="card-img-top" alt="${product.name}">
-                            <div class="card-body">
-                                <h5 class="card-title">${product.name}</h5>
-                                <p class="card-text">${product.description}</p>
-                                <p class="card-text"><strong>Rp ${product.price.toLocaleString()}</strong></p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                productList.innerHTML += productCard;
-            });
+        // Fungsi untuk mengisi modal edit
+        function setEditModal(id, nama_produk, harga, deskripsi, stok) {
+            document.getElementById('edit_id').value = id;
+            document.getElementById('edit_nama_produk').value = nama_produk;
+            document.getElementById('edit_harga').value = harga;
+            document.getElementById('edit_deskripsi').value = deskripsi;
+            document.getElementById('edit_stok').value = stok;
         }
-
-        // Tampilkan semua produk saat halaman dimuat
-        displayProducts(products);
-
-        // Fitur filter berdasarkan kategori
-        document.getElementById('categoryFilter').addEventListener('change', (e) => {
-            const selectedCategory = e.target.value;
-            if (selectedCategory === 'all') {
-                displayProducts(products);
-            } else {
-                const filteredProducts = products.filter(product => product.category === selectedCategory);
-                displayProducts(filteredProducts);
-            }
-        });
 
         // Modal untuk proyek
         document.querySelectorAll('.card-project').forEach(card => {
